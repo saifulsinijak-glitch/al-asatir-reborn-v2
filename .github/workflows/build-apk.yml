@@ -1,0 +1,76 @@
+name: Build APK
+on: workflow_dispatch
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Web files
+        run: |
+          mkdir www
+          npm init -y
+          npm i @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6 @capacitor/assets three@0.128.0
+          cp index.html www/index.html
+          cp node_modules/three/build/three.min.js www/three.min.js
+          sed -i 's#https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js#three.min.js#' www/index.html
+      - name: Icon and splash
+        run: |
+          pip install pillow
+          mkdir assets
+          python3 - <<'PY'
+          from PIL import Image, ImageDraw
+          def art(n, k):
+              bg = (11, 8, 20)
+              im = Image.new('RGB', (n, n), bg)
+              d = ImageDraw.Draw(im)
+              c = n / 2
+              r = n * k
+              d.ellipse([c-r, c-r, c+r, c+r], fill=(212, 168, 75))
+              cx, cy, q = c + r*0.45, c - r*0.15, r*0.85
+              d.ellipse([cx-q, cy-q, cx+q, cy+q], fill=bg)
+              return im
+          art(1024, .32).save('assets/icon-only.png')
+          s = art(2732, .1)
+          s.save('assets/splash.png')
+          s.save('assets/splash-dark.png')
+          PY
+      - name: Android project
+        run: |
+          cat > capacitor.config.json <<'EOF2'
+          {"appId":"com.alasatir.thereborn","appName":"AL-ASATIR: THE REBORN","webDir":"www","backgroundColor":"#0b0814"}
+          EOF2
+          npx cap add android
+          npx capacitor-assets generate --android --iconBackgroundColor '#0b0814' --splashBackgroundColor '#0b0814'
+          npx cap sync android
+          sed -i 's#<activity#<activity android:screenOrientation="sensorLandscape"#' android/app/src/main/AndroidManifest.xml
+          cat > android/app/src/main/java/com/alasatir/thereborn/MainActivity.java <<'EOF3'
+          package com.alasatir.thereborn;
+          import android.os.Bundle;
+          import androidx.core.view.WindowCompat;
+          import androidx.core.view.WindowInsetsCompat;
+          import androidx.core.view.WindowInsetsControllerCompat;
+          import com.getcapacitor.BridgeActivity;
+          public class MainActivity extends BridgeActivity {
+            @Override public void onCreate(Bundle b) { super.onCreate(b); hide(); }
+            @Override public void onWindowFocusChanged(boolean f) { super.onWindowFocusChanged(f); if (f) hide(); }
+            private void hide() {
+              WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+              WindowInsetsControllerCompat c = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+              c.hide(WindowInsetsCompat.Type.systemBars());
+              c.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            }
+          }
+          EOF3
+      - name: Build APK
+        run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AL-ASATIR-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
