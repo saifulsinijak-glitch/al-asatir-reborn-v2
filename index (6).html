@@ -1,0 +1,287 @@
+<!DOCTYPE html><html lang="ms"><head><meta charset="utf-8"><title>AL-ASATIR: THE REBORN</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Cormorant+Garamond:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:#d4a84b;--k:#0b0814;--r:#7a1424;--s:#c9a27a;--b:#0f1a3d;--p:#3a1c5c;--u:4px;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:none}
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;color:#f1e3c2}
+body{display:flex;align-items:center;justify-content:center}
+#stage{position:relative;overflow:hidden;background:var(--k);font-size:calc(var(--u)*4.2)}
+canvas{width:100%;height:100%;display:block}
+.ov{position:absolute;inset:0;display:none}
+button{font:inherit;color:#f1e3c2;background:rgba(15,26,61,.85);border:1px solid var(--g);border-radius:calc(var(--u)*1);padding:calc(var(--u)*1.4) calc(var(--u)*3);cursor:pointer}
+button:active,button.on{background:var(--r)}
+button:disabled{opacity:.35}
+.ar{font-family:'Aref Ruqaa',serif}
+#hud{pointer-events:none}#hud>*{position:absolute}
+#tl{left:calc(var(--u)*2);top:calc(var(--u)*2);background:rgba(11,8,20,.7);border:1px solid var(--g);padding:calc(var(--u)*1.2) calc(var(--u)*2);width:calc(var(--u)*26)}
+.bar{height:calc(var(--u)*1.2);background:#000;margin:calc(var(--u)*.8) 0}.bar i{display:block;height:100%;background:var(--g);width:0}
+#trk{left:calc(var(--u)*31);top:calc(var(--u)*2);max-width:calc(var(--u)*70);background:rgba(58,28,92,.7);border-left:3px solid var(--g);padding:calc(var(--u)*1.2) calc(var(--u)*2)}
+#mb{right:calc(var(--u)*2);top:calc(var(--u)*2);pointer-events:auto}
+#zb{right:calc(var(--u)*2);top:calc(var(--u)*16);display:flex;flex-direction:column;gap:calc(var(--u)*1.5);pointer-events:auto}
+#joy{left:calc(var(--u)*6);bottom:calc(var(--u)*5);width:calc(var(--u)*30);height:calc(var(--u)*30);border-radius:50%;border:2px solid rgba(212,168,75,.6);background:rgba(11,8,20,.35);pointer-events:auto}
+#kn{position:absolute;left:50%;top:50%;width:40%;height:40%;margin:-20% 0 0 -20%;border-radius:50%;background:rgba(212,168,75,.7)}
+#act{right:calc(var(--u)*8);bottom:calc(var(--u)*8);min-width:calc(var(--u)*26);height:calc(var(--u)*17);border-radius:calc(var(--u)*9);display:none;pointer-events:auto;background:var(--r)}
+#jmp{right:calc(var(--u)*38);bottom:calc(var(--u)*5);width:calc(var(--u)*14);height:calc(var(--u)*14);border-radius:50%;padding:0;pointer-events:auto}
+#toast{left:50%;top:calc(var(--u)*20);transform:translateX(-50%);background:rgba(11,8,20,.88);border:1px solid var(--g);padding:calc(var(--u)*1.4) calc(var(--u)*4);display:none;white-space:nowrap}
+#dlg{align-items:flex-end;justify-content:center;padding-bottom:calc(var(--u)*3)}
+#db{width:68%;display:flex;gap:calc(var(--u)*3);background:rgba(11,8,20,.94);border:2px solid var(--g);padding:calc(var(--u)*2.5)}
+#pt{flex:0 0 calc(var(--u)*17);height:calc(var(--u)*17);border-radius:50%;border:2px solid var(--g);display:flex;align-items:center;justify-content:center;font-size:calc(var(--u)*9)}
+#dn{color:var(--g);font-size:calc(var(--u)*4.6)}#dt{line-height:1.25;margin:calc(var(--u)*.8) 0}
+#dc{display:flex;flex-wrap:wrap;gap:calc(var(--u)*1.5)}
+#cin{background:#000;align-items:center;justify-content:center;text-align:center;padding:0 12%;font-size:calc(var(--u)*6.2);line-height:1.3}
+#cin small{position:absolute;bottom:calc(var(--u)*3);font-size:calc(var(--u)*3.4);opacity:.6}
+#mm{background:linear-gradient(90deg,rgba(11,8,20,.92) 8%,rgba(11,8,20,.15) 70%);align-items:center;padding:0 7%;justify-content:space-between}
+#mm h1{margin:0;font-size:calc(var(--u)*26);line-height:1;color:var(--g);font-weight:700}
+#mm h2{margin:calc(var(--u)*1) 0 0;font-size:calc(var(--u)*7);letter-spacing:.35em;font-weight:700}
+#mm h3{margin:calc(var(--u)*1.5) 0 0;font-size:calc(var(--u)*4);font-weight:500;color:var(--s)}
+#mb2{display:flex;flex-direction:column;gap:calc(var(--u)*2);width:calc(var(--u)*50)}
+#pn{background:rgba(5,3,12,.93);padding:calc(var(--u)*3);gap:calc(var(--u)*3)}
+#tabs{display:flex;flex-direction:column;gap:calc(var(--u)*1);width:calc(var(--u)*28)}
+#tabs button{padding:calc(var(--u)*.9) calc(var(--u)*2);text-align:left}
+#pc{flex:1;overflow-y:auto;border:1px solid var(--g);padding:calc(var(--u)*2.5);touch-action:pan-y;user-select:text}
+.card{border-left:3px solid var(--g);background:rgba(58,28,92,.45);padding:calc(var(--u)*1.2) calc(var(--u)*2);margin-bottom:calc(var(--u)*1.5)}
+.card b{color:var(--g)}.mut{color:var(--s);font-size:.85em}
+#rot{background:#000;z-index:9;align-items:center;justify-content:center;text-align:center;font-size:calc(var(--u)*7)}
+</style></head><body>
+<div id="stage">
+<canvas id="c"></canvas>
+<div id="hud" class="ov">
+ <div id="tl"><div id="lv"></div><div class="bar"><i id="xb"></i></div><div id="co" class="mut"></div></div>
+ <div id="trk"></div>
+ <button id="mb">☰</button>
+ <div id="zb"><button onclick="zoom(-1.5)">+</button><button onclick="zoom(1.5)">−</button></div>
+ <div id="joy"><div id="kn"></div></div>
+ <button id="act"></button><button id="jmp">▲</button>
+ <div id="toast"></div>
+</div>
+<div id="dlg" class="ov"><div id="db"><div id="pt" class="ar"></div><div style="flex:1"><div id="dn"></div><div id="dt"></div><div id="dc"></div></div></div></div>
+<div id="pn" class="ov"><div id="tabs"></div><div id="pc"></div></div>
+<div id="mm" class="ov"><div><h1 class="ar">الأساطير</h1><h2>AL-ASATIR</h2><h3>THE REBORN</h3></div><div id="mb2"></div></div>
+<div id="cin" class="ov ar"><div id="ct"></div><small data-k="tap"></small></div>
+<div id="rot" class="ov ar"><div>⟲<br><span data-k="rot"></span></div></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const D=(ms,en)=>({ms,en});
+const cfg={lang:'ms',gfx:1,mv:.6,sv:.7};
+try{Object.assign(cfg,JSON.parse(localStorage.getItem('asatir_set')||'{}'))}catch(e){}
+const UI={ms:{new:'Permainan Baharu',cont:'Sambung',load:'Muat Permainan',set:'Tetapan',cred:'Kredit',char:'Watak',quest:'Buku Misi',inv:'Inventori',map:'Peta Dunia',jour:'Jurnal',save:'Simpan',back:'Tutup',talk:'Bercakap',take:'Ambil',open:'Buka pintu',lang:'Bahasa',gfx:'Grafik',music:'Muzik',sfx:'Bunyi',fs:'Skrin Penuh',low:'Rendah',med:'Sederhana',high:'Tinggi',tap:'Ketik untuk teruskan',rot:'Putar telefon ke landskap (19:6)',lvl:'Tahap',ch:'Bab 1: Cahaya yang Hilang',main:'Utama',side:'Sampingan',chr:'Watak',expl:'Penerokaan',done:'Selesai',active:'Aktif',none:'Kosong',auto:'Auto',slot:'Slot',saved:'Disimpan',rel:'Hubungan',key:'Item Utama',qi:'Item Misi',col:'Koleksi',mat:'Bahan',oth:'Lain-lain',locked:'Belum diterokai',obj:'Objektif',rw:'Ganjaran',lu:'Naik tahap!',gl:'Pintu dikunci. Cari kunci.',age:'Umur',hist:'Sejarah Perbualan',cr:'Reka bentuk, cerita, kod & audio: original. Tiada tokoh sebenar digunakan.',empty:'Tiada rekod.'},
+en:{new:'New Game',cont:'Continue',load:'Load Game',set:'Settings',cred:'Credits',char:'Character',quest:'Quest Log',inv:'Inventory',map:'World Map',jour:'Journal',save:'Save',back:'Close',talk:'Talk to',take:'Take',open:'Open gate',lang:'Language',gfx:'Graphics',music:'Music',sfx:'Sound',fs:'Fullscreen',low:'Low',med:'Medium',high:'High',tap:'Tap to continue',rot:'Rotate your phone to landscape (19:6)',lvl:'Level',ch:'Chapter 1: The Vanished Light',main:'Main',side:'Side',chr:'Character',expl:'Exploration',done:'Done',active:'Active',none:'Empty',auto:'Auto',slot:'Slot',saved:'Saved',rel:'Relationship',key:'Key Items',qi:'Quest Items',col:'Collectibles',mat:'Materials',oth:'Other',locked:'Unexplored',obj:'Objective',rw:'Reward',lu:'Level up!',gl:'The gate is locked. Find the key.',age:'Age',hist:'Conversation History',cr:'Design, story, code & audio: original. No real figures are used.',empty:'No records.'}};
+const t=k=>(UI[cfg.lang]||UI.en)[k]||k, L=o=>o[cfg.lang]||o.en;
+const NPCS={
+samira:{n:'Samira',col:0xb3262e,hat:0xd4a84b,sk:0xb87a56,p:[[6,4],[10,6],[6,9]]},
+barzan:{n:'Barzan',col:0x24305e,hat:0x777788,sk:0x8a5a3c,p:[[-3,-11.5],[3,-11.5]]},
+lamis:{n:'Lamis',col:0x5a2a86,hat:0xe5d5b0,sk:0xc08a62,p:[[-14,-4.5]]},
+yalda:{n:'Yalda',col:0x2e7d6b,hat:0xc9a27a,sk:0x9b6a48,p:[[-9,8],[-12,11]]}};
+const ITEM={lantern:{c:'qi',n:D('Tanglung Gangsa','Brass Lantern'),d:D('Peninggalan ibu Samira. Cahayanya bergetar bila Nadir menghampiri.','Samira\'s mother\'s lantern. Its light trembles when Nadir draws near.')},
+dates:{c:'qi',n:D('Kurma Madu','Honey Dates'),d:D('Sebungkus kurma milik Yalda.','A pouch of Yalda\'s dates.')},
+letter:{c:'qi',n:D('Surat Bermeterai','Sealed Letter'),d:D('Meterai Pengawal Qamar. Untuk Lamis.','Sealed by the Qamar Guard. For Lamis.')},
+key:{c:'key',n:D('Kunci Bulan','Moon Key'),d:D('Membuka pintu Dewan Takhta Purba.','Opens the Ancient Throne Hall gate.')},
+shard:{c:'col',n:D('Serpihan Bulan','Moon Shard'),d:D('Serpihan kaca yang bersinar lembut.','A softly glowing glass shard.')},
+coin:{c:'mat',n:D('Syiling Emas','Gold Coin'),d:D('Mata wang Qamar.','Qamar currency.')}};
+let S,mode='menu',prev='menu';
+const fresh=()=>({xp:0,q:{lantern:0,letter:0,dates:0,shards:1,gate:0},inv:{coin:0},sh:[0,0,0],rel:{samira:0,barzan:0,lamis:0,yalda:0},gate:0,gen:0,end:0,hist:[],clues:[]});
+const lvl=()=>1+Math.floor(S.xp/80);
+const Q={
+lantern:{ty:'main',n:D('Cahaya Pertama','First Light'),d:D('Tanglung gangsa Samira hilang di hujung bazar.','Samira\'s brass lantern is lost in the bazaar.'),r:60,pr:()=>S.q.lantern==2?[3,3]:[S.inv.lantern?2:1,3],o:()=>S.inv.lantern?D('Pulangkan tanglung kepada Samira.','Return the lantern to Samira.'):D('Cari tanglung di hujung timur bazar.','Find the lantern at the bazaar\'s east end.')},
+gate:{ty:'main',n:D('Pintu Dewan Takhta','The Throne Hall Gate'),d:D('Kunci Bulan membuka pintu ke utara.','The Moon Key opens the gate to the north.'),r:100,pr:()=>S.q.gate==2?[4,4]:[Math.min(S.clues.length,3)+(S.gate?1:0),4],o:()=>S.clues.length<3&&!S.gate?D('Tanya penduduk tentang malam Ratu Bulan hilang ('+S.clues.length+'/3).','Ask townsfolk about the night the Moon Queen vanished ('+S.clues.length+'/3).'):S.gate?D('Masuki Dewan Takhta Purba.','Enter the Ancient Throne Hall.'):D('Buka pintu besar di utara bazar.','Open the great gate north of the bazaar.')},
+letter:{ty:'chr',n:D('Surat Barzan','Barzan\'s Letter'),d:D('Kapten Barzan mahu suratnya sampai kepada Lamis.','Captain Barzan needs his letter to reach Lamis.'),r:50,pr:()=>S.q.letter==2?[2,2]:[1,2],o:()=>D('Hantar surat kepada Lamis di Moonlight Courtyard (barat laut).','Deliver the letter to Lamis in Moonlight Courtyard (north-west).')},
+dates:{ty:'side',n:D('Kurma Yalda','Yalda\'s Dates'),d:D('Yalda terjatuhkan bungkusan kurmanya.','Yalda dropped her pouch of dates.'),r:30,pr:()=>S.q.dates==2?[2,2]:[S.inv.dates?1:0,2],o:()=>S.inv.dates?D('Bawa kurma kepada Yalda.','Bring the dates to Yalda.'):D('Cari kurma di barat daya bazar.','Find the dates south-west of the bazaar.')},
+shards:{ty:'expl',n:D('Serpihan Bulan','Moon Shards'),d:D('Tiga serpihan kaca tersembunyi di Qamar.','Three glass shards hide across Qamar.'),r:80,pr:()=>[S.sh.filter(x=>x).length,3],o:()=>D('Cari Serpihan Bulan ('+S.sh.filter(x=>x).length+'/3).','Find the Moon Shards ('+S.sh.filter(x=>x).length+'/3).')}};
+const give=(i,n=1)=>{S.inv[i]=(S.inv[i]||0)+n;if(i!='coin')toast(L(ITEM[i].n));sfx(660)};
+const take=i=>{S.inv[i]=0};
+const toast=s=>{const e=$('toast');e.textContent=s;e.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>e.style.display='none',2400)};
+function addXP(n){const a=lvl();S.xp+=n;toast('+'+n+' EXP');if(lvl()>a)setTimeout(()=>toast(t('lu')+' '+lvl()),900);hud()}
+const startQ=k=>{S.q[k]=1;toast(L(Q[k].n));sfx(520);hud()};
+const finish=k=>{S.q[k]=2;addXP(Q[k].r);sfx(784);hud()};
+function menuC(v){return[{t:D('Siapa Ratu Bulan?','Who is the Moon Queen?'),s:()=>[{w:v.id,t:v.q,c:menuC(v)}]},{t:D('Apa berlaku malam dia hilang?','What happened the night she vanished?'),s:()=>[{w:v.id,t:v.k,f:()=>clue(v.cl),c:menuC(v)}]},{t:D('Selamat tinggal.','Goodbye.')}]}
+function talkSteps(id){const q=S.q,r=S.rel;if(NPCS[id].vil){const a=NPCS[id].vil;return[{w:id,t:D('Selamat malam, Nadir. Mahu tanya apa-apa?','Good evening, Nadir. Want to ask something?'),c:menuC({id,cl:a[6],q:a[7],k:a[8]})}]}
+if(id=='samira'){
+ if(!q.lantern)return[{w:'samira',t:D('Nadir! Syukurlah. Tanglung gangsa peninggalan ibuku hilang malam tadi di hujung bazar. Tolong carikan?','Nadir! Thank goodness. My mother\'s brass lantern vanished last night at the bazaar\'s far end. Will you find it?'),c:[{t:D('Saya akan cari.','I\'ll find it.'),f:()=>startQ('lantern'),s:[{w:'samira',t:D('Cari di timur, dekat gerai rempah. Cahayanya... aneh bila kau dekat.','Try the east end by the spice stalls. Its glow is odd when you\'re near.')}]},{t:D('Nanti dulu.','Maybe later.')}]}];
+ if(q.lantern==1&&!S.inv.lantern)return[{w:'samira',t:D('Belum jumpa? Cuba di timur, dekat gerai rempah.','No luck? Try the east end by the spice stalls.')}];
+ if(q.lantern==1)return[{w:'samira',t:D('Itu dia! Demi bulan... apa yang patut aku beri?','That\'s it! By the moon... what can I give you?'),c:[{t:D('Ambillah, tak perlu bayaran.','Keep it, no payment needed.'),f:()=>{take('lantern');r.samira+=2;S.gen=1;finish('lantern')},s:[{w:'samira',t:D('Kebaikanmu akan kuingat, Nadir. Seluruh bazar akan tahu.','I\'ll remember your kindness, Nadir. The whole bazaar will know.')}]},{t:D('Saya mahu upah.','I\'d like a reward.'),f:()=>{take('lantern');r.samira-=1;give('coin',5);finish('lantern')},s:[{w:'samira',t:D('Adil. Ini lima syiling. Terima kasih.','Fair enough. Five coins. Thank you.')}]}]}];
+ return[{w:'samira',t:S.gen?D('Tanglung itu bersinar semula. Kau sentiasa dialu-alukan di gerai ini.','The lantern shines again. You\'re always welcome at my stall.'):D('Tanglung itu selamat. Jangan lupa Barzan mencarimu di dewan utara.','The lantern is safe. Barzan was looking for you by the north gate.')}]}
+if(id=='barzan'){
+ if(!q.letter)return[{w:'barzan',t:D('Nadir. Kau pembaiki tanglung yang dipercayai Samira. Aku perlukan seseorang yang tidak berpakaian pengawal.','Nadir. You\'re the lantern-mender Samira trusts. I need someone who doesn\'t wear a guard\'s uniform.'),c:[{t:D('Apa yang perlu dihantar?','What needs delivering?'),f:()=>{startQ('letter');give('letter');r.barzan+=1},s:[{w:'barzan',t:D('Surat ini untuk Lamis di Moonlight Courtyard. Jangan buka. Jangan tunjuk kepada sesiapa.','This letter is for Lamis in Moonlight Courtyard. Don\'t open it. Show no one.')}]},{t:D('Saya sibuk.','I\'m busy.')}]}];
+ if(q.letter==1)return[{w:'barzan',t:D('Lamis di barat laut, di sebelah air pancut. Pergilah.','Lamis is north-west, by the fountain. Go.')}];
+ return[{w:'barzan',t:S.gate?D('Kau buka pintu itu? Dewan itu tidak dibuka sejak sebelum aku berkhidmat. Berhati-hati.','You opened that gate? That hall hasn\'t opened since before my service. Be careful.'):D('Lamis memberimu kunci? Gunakan pintu di utara. Tetapi jangan beritahu sesiapa.','Lamis gave you a key? The gate is north. But tell no one.')}]}
+if(id=='lamis'){
+ if(q.letter==1&&S.inv.letter)return[{w:'lamis',t:D('Seorang budak pembaiki tanglung membawa surat dari Barzan... Qamar memang suka bergurau.','A lantern-mender bringing Barzan\'s letter... Qamar does love a joke.')},{w:'lamis',t:S.gen?D('Aku dengar kau menolak upah demi tanglung Samira. Itu tanda hati yang jarang.','I hear you refused payment for Samira\'s lantern. A rare heart.'):D('Kau lambat. Tetapi cukup tepat pada masanya.','You\'re slow. But just in time.'),f:()=>{take('letter');give('key');startQ('gate');r.lamis+=1;finish('letter')}},{w:'lamis',t:D('Ambil Kunci Bulan ini. Dewan Takhta di utara bazar telah tertutup sembilan belas tahun, sejak Ratu Bulan hilang dan bulan retak tiga. Ada sesuatu di sana yang menunggu pewarisnya.','Take this Moon Key. The Throne Hall north of the bazaar has been sealed nineteen years, since the Moon Queen vanished and the moon cracked in three. Something there awaits its heir.'),c:[{t:D('Pewaris siapa?','Whose heir?'),s:[{w:'lamis',t:D('Jawapannya bukan untuk telinga bazar. Tanya penduduk tentang malam itu, tiga kebenaran, dan kau akan faham sendiri.','Not for the bazaar\'s ears. Ask the people about that night, three truths, and you\'ll understand yourself.')}]}]}];
+ return[{w:'lamis',t:D('Bulan Qamar pernah pecah menjadi tiga serpihan, kata cerita lama. Kalau kau jumpa, simpan baik-baik.','The old tale says Qamar\'s moon once broke into three shards. If you find them, keep them safe.')}]}
+if(id=='yalda'){
+ if(!q.dates)return[{w:'yalda',t:D('Abang Nadir! Kurma ibuku terjatuh bila aku lari dari kucing pasar. Boleh cari?','Brother Nadir! My mother\'s dates fell when I ran from the market cat. Can you find them?'),c:[{t:D('Boleh.','Sure.'),f:()=>startQ('dates')},{t:D('Tak boleh sekarang.','Not now.')}]}];
+ if(q.dates==1&&!S.inv.dates)return[{w:'yalda',t:D('Mungkin di barat daya, dekat tembok.','Maybe south-west, near the wall.')}];
+ if(q.dates==1)return[{w:'yalda',t:D('Kurmaku! Nah, tiga syiling untukmu?','My dates! Here, three coins for you?'),c:[{t:D('Simpan syilingmu.','Keep your coins.'),f:()=>{take('dates');r.yalda+=2;finish('dates')},s:[{w:'yalda',t:D('Abang baik betul!','You\'re the kindest!')}]},{t:D('Terima kasih.','Thanks.'),f:()=>{take('dates');give('coin',3);finish('dates')},s:[{w:'yalda',t:D('Sama-sama!','You\'re welcome!')}]}]}];
+ return[{w:'yalda',t:D('Kucing itu sudah jadi kawan. Namanya Bulan.','The cat and I are friends now. Her name is Moon.')}]}}
+const hash=n=>{let h=0;for(const c of n)h=h*31+c.charCodeAt(0);return h};
+const CL={c1:D('Ratu Bulan tidak mati. Dia memadamkan semua tanglung istana lalu memilih untuk hilang.','The Moon Queen did not die. She snuffed every palace lantern and chose to vanish.'),c2:D('Malam itu seorang bayi ditinggalkan di kedai tanglung Pak Orin, tempat Nadir dibesarkan.','That night a baby was left at Old Orin\'s lantern shop, where Nadir was raised.'),c3:D('Seorang pengawal diraja membawa bayi itu keluar dari dewan, berpakaian biasa.','A royal guard carried the infant out of the hall in plain clothes.'),c4:D('Kunci Bulan hanya bersinar apabila pewaris sebenar menghampiri.','The Moon Key only glows near the true heir.'),c5:D('Bulan retak tiga malam itu. Serpihannya jatuh ke seluruh Qamar.','The moon cracked in three that night. Its shards fell across Qamar.'),c6:D('Wazir Kharan, yang menutup dewan, kini menguasai Rakhim Fortress.','Vizier Kharan, who sealed the hall, now rules Rakhim Fortress.')};
+const clue=c=>{if(S.clues.includes(c))return;S.clues.push(c);S.hist.push('★ '+L(CL[c]));toast('★ '+L(CL[c]));sfx(880);hud()};
+[['hamra','Hamra',0x8a3a2a,0xe5d5b0,0xa9714c,[[-2,11],[2,12]],'c1',D('Ratu Bulan menyalakan tanglung pertama Qamar. Itu sebabnya setiap rumah menyimpan satu.','The Moon Queen lit Qamar\'s first lantern. That\'s why every home keeps one.'),D('Malam dia hilang, setiap tanglung istana padam serentak. Dia tidak diculik, dia memilih.','The night she vanished every palace lantern went dark at once. She wasn\'t taken, she chose.')],
+['dalir','Dalir',0x2a4a7a,0xd4a84b,0x8a5a3c,[[8,0],[8,3]],'c2',D('Di bazar dia tidak pernah memakai mahkota. Hanya selendang biru.','In the bazaar she never wore a crown. Only a blue shawl.'),D('Malam itu seorang bayi ditinggalkan di kedai tanglung Pak Orin. Dia membesarkannya seperti anak sendiri.','That night a baby was left at Old Orin\'s lantern shop. He raised the child as his own.')],
+['zafira','Zafira',0x2e5d7d,0xc9a27a,0xb98458,[[-10,-6],[-10,-2]],'c3',D('Dia yang membina air pancut itu. Katanya air mengingat siapa yang minum.','She built that fountain. She said water remembers who drinks.'),D('Aku nampak seorang pengawal diraja keluar dari dewan membawa bungkusan kecil, berpakaian biasa.','I saw a royal guard leave the hall with a small bundle, in plain clothes.')],
+['nasrin','Nasrin',0x7a3a6a,0xe5d5b0,0x9b6a48,[[14,12],[11,10]],'c4',D('Dewan Takhta tidak dibuka lagi. Kuncinya ada dua, satu dibawa Ratu.','The Throne Hall never opened again. There are two keys, the Queen took one.'),D('Kunci Bulan hanya bersinar bila pewaris sebenar menghampiri. Begitu kata nenekku.','The Moon Key only glows near the true heir. So my grandmother said.')],
+['dorjan','Dorjan',0x3a3a5a,0x9ad8ff,0xc08a62,[[-18,6],[-18,12]],'c5',D('Aku kaji bintang. Bulan Qamar kini lebih malap daripada dulu.','I study the stars. Qamar\'s moon is dimmer than before.'),D('Sejak malam itu bulan retak tiga. Serpihannya jatuh ke seluruh Qamar, ada yang masih bersinar.','Since that night the moon cracked in three. Shards fell across Qamar, some still glow.')],
+['mirza','Mirza',0x5a4a2a,0xb3262e,0x8a5a3c,[[21,2],[23,4]],'c6',D('Wazir Kharan dulu sentiasa di sisi Ratu. Senyumnya terlalu sopan.','Vizier Kharan always stood beside the Queen. His smile was too polite.'),D('Wazir yang menutup dewan itu menghilang. Orang kata dia kini menguasai Rakhim Fortress.','The vizier who sealed the hall vanished. They say he now rules Rakhim Fortress.')]].forEach(a=>NPCS[a[0]]={n:a[1],col:a[2],hat:a[3],sk:a[4],p:a[5],vil:a});
+// ---------- audio
+let AC,mg,sg,nb;
+function audio(){if(AC)return;try{AC=new(window.AudioContext||window.webkitAudioContext)();mg=AC.createGain();sg=AC.createGain();mg.connect(AC.destination);sg.connect(AC.destination);vol();
+nb=AC.createBuffer(1,4410,44100);const d=nb.getChannelData(0);for(let i=0;i<4410;i++)d[i]=(Math.random()*2-1)*(1-i/4410);
+const o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=73.4;g.gain.value=.12;o.connect(g);g.connect(mg);o.start();
+const SC=[293.66,311.13,369.99,392,440,466.16,554.37];
+setInterval(()=>{if(AC.state!='running'||mode=='menu'&&0)return;const f=SC[Math.random()*7|0]/(Math.random()<.5?2:1),n=AC.currentTime,a=AC.createOscillator(),b=AC.createGain();a.type='triangle';a.frequency.value=f;b.gain.setValueAtTime(0,n);b.gain.linearRampToValueAtTime(.2,n+.05);b.gain.exponentialRampToValueAtTime(.001,n+2.4);a.connect(b);b.connect(mg);a.start(n);a.stop(n+2.5)},1100)}catch(e){}}
+function vol(){if(mg){mg.gain.value=cfg.mv;sg.gain.value=cfg.sv}}
+function sfx(f){if(!AC||AC.state!='running')return;const n=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.25,n);g.gain.exponentialRampToValueAtTime(.001,n+.18);o.connect(g);g.connect(sg);o.start(n);o.stop(n+.2)}
+function step(){if(!AC||AC.state!='running')return;const s=AC.createBufferSource(),f=AC.createBiquadFilter(),g=AC.createGain();s.buffer=nb;f.type='lowpass';f.frequency.value=500;g.gain.value=.5;s.connect(f);f.connect(g);g.connect(sg);s.start()}
+// ---------- 3D
+const stage=$('stage'),cv=$('c');
+const R=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+const sc=new THREE.Scene();sc.background=new THREE.Color(0x120c2a);sc.fog=new THREE.FogExp2(0x1a1030,.016);
+const cam=new THREE.PerspectiveCamera(55,19/6,.1,200);
+sc.add(new THREE.HemisphereLight(0x8a7fd0,0x3a2a20,.8));
+const sun=new THREE.DirectionalLight(0xffd9a0,.9);sun.position.set(-20,30,-10);sun.shadow.camera.left=-34;sun.shadow.camera.right=34;sun.shadow.camera.top=34;sun.shadow.camera.bottom=-34;sun.shadow.camera.far=90;sc.add(sun);
+function gfxApply(){const g=cfg.gfx;R.setPixelRatio(g==0?1:Math.min(devicePixelRatio,g==1?1.5:2));R.shadowMap.enabled=g>0;sun.castShadow=g>0;sun.shadow.mapSize.set(g==2?2048:1024,g==2?2048:1024);if(sun.shadow.map){sun.shadow.map.dispose();sun.shadow.map=null}sc.traverse(o=>{if(o.material)o.material.needsUpdate=true});fit()}
+function fit(){const w=innerWidth,h=innerHeight,sw=Math.min(w,h*19/6),sh=sw*6/19;stage.style.width=sw+'px';stage.style.height=sh+'px';stage.style.setProperty('--u',sh/100+'px');R.setSize(sw,sh,false);cam.aspect=19/6;cam.updateProjectionMatrix();$('rot').style.display=h>w?'flex':'none'}
+addEventListener('resize',fit);
+function tex(c1,c2,rep,kind){const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');x.fillStyle=c1;x.fillRect(0,0,128,128);
+if(kind=='sand'){for(let i=0;i<1800;i++){x.fillStyle='rgba(0,0,0,'+Math.random()*.12+')';x.fillRect(Math.random()*128,Math.random()*128,2,2)}}
+else{x.strokeStyle=c2;x.lineWidth=2;for(let i=0;i<4;i++)for(let j=0;j<4;j++){const a=i*32+16,b=j*32+16;x.beginPath();x.moveTo(a,b-14);x.lineTo(a+14,b);x.lineTo(a,b+14);x.lineTo(a-14,b);x.closePath();x.stroke()}}
+const T=new THREE.CanvasTexture(c);T.wrapS=T.wrapT=THREE.RepeatWrapping;T.repeat.set(rep,rep);return T}
+const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,flatShading:true,roughness:.85},o||{}));
+const col=[];
+function box(w,h,d,x,y,z,m,cl){const b=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);b.position.set(x,y,z);b.castShadow=b.receiveShadow=true;sc.add(b);if(cl)col.push({x,z,hx:w/2,hz:d/2,h:y+h/2});return b}
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(70,60),new THREE.MeshStandardMaterial({map:tex('#b9946a','#000',14,'sand'),roughness:1}));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;sc.add(ground);
+const wallM=M(0x3a2a3c,{map:tex('#4a3550','#d4a84b',3)}),gold=M(0xd4a84b,{metalness:.6,roughness:.4,emissive:0x2a1a00}),wood=M(0x5a3a22);
+const bw=(x,z,w,d)=>box(w,7,d,x,3.5,z,wallM,1);
+bw(0,26,70,2);bw(-35,0,2,60);bw(35,0,2,60);bw(0,-27,70,2);
+bw(-20,-14,16,1.2);bw(20,-14,16,1.2);bw(-7.5,-14,9,1.2);bw(7.5,-14,9,1.2);
+const gate=box(6,6,.7,0,3,-14,M(0x2a1608,{emissive:0x1a0a00}));gate.add(new THREE.Mesh(new THREE.TorusGeometry(1.3,.12,6,16),gold));
+const gcol={x:0,z:-14,hx:3,hz:.5,h:6,on:()=>!S.gate};col.push(gcol);
+function building(x,z,w,d,h,c){box(w,h,d,x,h/2,z,M(c,{map:tex('#'+c.toString(16).padStart(6,'0'),'#d4a84b',2)}),1);const r=Math.min(w,d)*.45,dm=new THREE.Mesh(new THREE.SphereGeometry(r,16,8,0,Math.PI*2,0,Math.PI/2),gold);dm.position.set(x,h,z);dm.castShadow=true;sc.add(dm);box(1.4,2.4,.2,x,1.2,z+d/2+.05,M(0x120a14))}
+building(-24,-4,7,7,5,0x7a1424);building(-22,16,8,6,4.5,0x3a1c5c);building(24,-6,8,7,5.5,0x0f1a3d);building(24,18,7,6,4,0x7a1424);building(-4,-20,0.01,0.01,.01,0x000000);
+function stall(x,z,c){box(2.6,1,1.4,x,.5,z,wood,1);const k=box(3,.12,2,x,2.4,z,M(c));[-1.3,1.3].forEach(a=>box(.12,2.4,.12,x+a,1.2,z-.8,wood));for(let i=0;i<4;i++){const s=new THREE.Mesh(new THREE.SphereGeometry(.22,8,6),M([0xd4a84b,0xb3262e,0x2e7d6b,0xe5d5b0][i]));s.position.set(x-.9+i*.6,1.2,z);sc.add(s)}}
+[[-4,4,0xb3262e],[0,8,0x3a1c5c],[-6,-2,0xd4a84b],[10,-2,0x2e7d6b],[14,6,0xb3262e],[18,10,0x0f1a3d],[4,-6,0x7a1424],[16,-9,0xd4a84b],[-16,2,0x3a1c5c]].forEach(a=>stall(...a));
+// fountain
+box(4,.8,4,-14,.4,-8,M(0x6a5a70),1);const fl=new THREE.Mesh(new THREE.CylinderGeometry(.3,.5,2.2,8),gold);fl.position.set(-14,1.5,-8);sc.add(fl);
+// lamps
+const lamps=[];[[-8,12],[8,12],[-8,-8],[8,-10],[20,0],[-20,10]].forEach(([x,z],i)=>{box(.16,3.4,.16,x,1.7,z,wood);const l=new THREE.Mesh(new THREE.SphereGeometry(.3,8,6),new THREE.MeshBasicMaterial({color:0xffc060}));l.position.set(x,3.6,z);sc.add(l);lamps.push(l);if(i<3){const p=new THREE.PointLight(0xffa040,.9,16);p.position.set(x,3.6,z);sc.add(p)}});
+// hall
+const hallF=new THREE.Mesh(new THREE.PlaneGeometry(68,24),new THREE.MeshStandardMaterial({map:tex('#2a1c3c','#d4a84b',10),roughness:.5}));hallF.rotation.x=-Math.PI/2;hallF.position.set(0,.02,-20.5);sc.add(hallF);
+[[-7,-17],[7,-17],[-7,-22],[7,-22]].forEach(([x,z])=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(.7,.9,7,10),M(0x4a3550));c.position.set(x,3.5,z);c.castShadow=true;sc.add(c);col.push({x,z,hx:.9,hz:.9,h:7})});
+box(7,.6,5,0,.3,-24,M(0x7a1424),1);box(1.6,2.6,.8,0,1.9,-25,gold);
+const orb=new THREE.Mesh(new THREE.SphereGeometry(.4,12,10),new THREE.MeshBasicMaterial({color:0xffe9a0}));orb.position.set(0,2.4,-22.6);sc.add(orb);
+const hl=new THREE.PointLight(0xffd080,1.2,22);hl.position.set(0,4,-20);sc.add(hl);
+// sky
+const moon=new THREE.Mesh(new THREE.SphereGeometry(7,20,16),new THREE.MeshBasicMaterial({color:0xf3e6c0,fog:false}));moon.position.set(-40,48,-70);sc.add(moon);
+{const p=[];for(let i=0;i<500;i++){const a=Math.random()*6.28,e=Math.random()*1.3+.1;p.push(Math.cos(a)*Math.cos(e)*120,Math.sin(e)*120,Math.sin(a)*Math.cos(e)*120)}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(p,3));sc.add(new THREE.Points(g,new THREE.PointsMaterial({color:0xffffff,size:1.6,sizeAttenuation:false,fog:false})))}
+const dust=(()=>{const p=new Float32Array(360);for(let i=0;i<360;i++)p[i]=(Math.random()-.5)*40;const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));const o=new THREE.Points(g,new THREE.PointsMaterial({color:0xe0c090,size:.12,transparent:true,opacity:.6}));o.frustumCulled=false;sc.add(o);return o})();
+// people
+function person(c,h,sk,s){s=s||1;const g=new THREE.Group(),b=new THREE.Mesh(new THREE.CylinderGeometry(.26*s,.42*s,1.3*s,8),M(c));b.position.y=.8*s;g.add(b);
+const hd=new THREE.Mesh(new THREE.SphereGeometry(.24*s,10,8),M(sk));hd.position.y=1.7*s;g.add(hd);
+const tb=new THREE.Mesh(new THREE.SphereGeometry(.29*s,10,6),M(h));tb.scale.y=.65;tb.position.y=1.9*s;g.add(tb);
+const sh=new THREE.Mesh(new THREE.TorusGeometry(.35*s,.06*s,6,12),gold);sh.rotation.x=Math.PI/2;sh.position.y=.9*s;g.add(sh);
+const cp=new THREE.Mesh(new THREE.BoxGeometry(.6*s,1.1*s,.06),M(c==0x24305e?0x7a1424:0x120a14));cp.position.set(0,1*s,-.28*s);g.add(cp);
+g.arms=[0,1].map(i=>{const a=new THREE.Mesh(new THREE.CylinderGeometry(.07,.07,.7,6),M(c));a.geometry.translate(0,-.3,0);a.position.set(i?.38*s:-.38*s,1.3*s,0);g.add(a);return a});
+g.torso=[b,hd,tb,sh,cp];g.traverse(o=>{if(o.isMesh)o.castShadow=true});sc.add(g);return g}
+const hero=person(0x0f1a3d,0xd4a84b,0xb98458);
+function label(g,s){const c=document.createElement('canvas');c.width=256;c.height=64;const x=c.getContext('2d');x.font='bold 34px Georgia';x.textAlign='center';x.fillStyle='rgba(11,8,20,.7)';x.fillRect(0,8,256,48);x.fillStyle='#d4a84b';x.fillText(s,128,44);const p=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false,transparent:true}));p.scale.set(2,.5,1);p.position.y=2.6;g.add(p);g.lab=p}
+const npcs=Object.keys(NPCS).map(id=>{const d=NPCS[id],g=person(d.col,d.hat,d.sk);g.position.set(d.p[0][0],0,d.p[0][1]);label(g,d.n);return{id,g,pts:d.p,i:0,w:Math.random()*2}});
+const pick=[];
+function pk(x,z,item,idx,on,color){const g=new THREE.Mesh(item=='shard'?new THREE.OctahedronGeometry(.4):item=='lantern'?new THREE.CylinderGeometry(.25,.3,.6,8):new THREE.SphereGeometry(.3,8,6),new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:.8}));g.position.set(x,.9,z);sc.add(g);const l=new THREE.PointLight(color,.7,6);g.add(l);pick.push({x,z,item,idx,on,m:g})}
+pk(20.5,-4,'lantern',0,()=>S.q.lantern==1&&!S.inv.lantern,0xffc060);
+pk(-23,12,'dates',0,()=>S.q.dates==1&&!S.inv.dates,0xc9a27a);
+[[22,13],[-24,-12],[14,-11]].forEach((p,i)=>pk(p[0],p[1],'shard',i,()=>!S.sh[i],0x9ad8ff));
+// ---------- state & controls
+const P={x:0,z:14,y:0,vy:0,ry:0};let yaw=0,pit=.45,dist=8,jx=0,jy=0,wk=0,stT=0;
+const keys={};addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=1;if(mode=='play'){if(e.key=='e'||e.key=='Enter')interact();if(e.key==' ')jump();if(e.key=='Escape'||e.key=='m')openPn('char')}else if(mode=='pause'&&e.key=='Escape')closePn()});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=0);
+const zoom=d=>dist=Math.max(4,Math.min(14,dist+d));cv.addEventListener('wheel',e=>zoom(e.deltaY*.01));
+let drag=null;cv.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY};cv.setPointerCapture(e.pointerId);audio()});
+cv.addEventListener('pointermove',e=>{if(!drag)return;yaw-=(e.clientX-drag.x)*.006;pit=Math.max(.1,Math.min(1.2,pit+(e.clientY-drag.y)*.004));drag={x:e.clientX,y:e.clientY}});
+cv.addEventListener('pointerup',()=>drag=null);
+const joy=$('joy'),kn=$('kn');let jp=null;
+joy.addEventListener('pointerdown',e=>{jp=e.pointerId;joy.setPointerCapture(e.pointerId);audio();jm(e)});
+joy.addEventListener('pointermove',e=>{if(e.pointerId==jp)jm(e)});
+const jr=e=>{if(e.pointerId==jp){jp=null;jx=jy=0;kn.style.transform=''}};joy.addEventListener('pointerup',jr);joy.addEventListener('pointercancel',jr);
+function jm(e){const r=joy.getBoundingClientRect(),R2=r.width/2;let dx=(e.clientX-r.left-R2)/R2,dy=(e.clientY-r.top-R2)/R2,m=Math.hypot(dx,dy);if(m>1){dx/=m;dy/=m;m=1}jx=dx;jy=dy;kn.style.transform='translate('+dx*R2*.6+'px,'+dy*R2*.6+'px)'}
+const jump=()=>{if(P.y<=0.01)P.vy=7.5};$('jmp').addEventListener('pointerdown',jump);
+$('act').addEventListener('pointerdown',e=>{e.preventDefault();interact()});$('mb').onclick=()=>openPn('char');
+function blocked(x,z,y){for(const c of col){if(c.on&&!c.on())continue;if(y>=c.h)continue;const nx=Math.max(c.x-c.hx,Math.min(x,c.x+c.hx)),nz=Math.max(c.z-c.hz,Math.min(z,c.z+c.hz));if(Math.hypot(x-nx,z-nz)<.42)return 1}return 0}
+function near(){let b=null,bd=2.6;for(const n of npcs){const d=Math.hypot(n.g.position.x-P.x,n.g.position.z-P.z);if(d<bd){bd=d;b={k:'n',n,l:t('talk')+' '+NPCS[n.id].n}}}
+for(const p of pick){if(!p.on())continue;const d=Math.hypot(p.x-P.x,p.z-P.z);if(d<bd){bd=d;b={k:'p',p,l:t('take')+' '+L(ITEM[p.item].n)}}}
+if(!S.gate&&Math.hypot(P.x,P.z+13)<3.6&&!(b&&bd<1.5))b={k:'g',l:t('open')};return b}
+let cur=null;
+function interact(){if(mode!='play'||!cur)return;audio();const c=cur;
+if(c.k=='n'){const n=c.n;n.g.rotation.y=Math.atan2(P.x-n.g.position.x,P.z-n.g.position.z);run(talkSteps(n.id))}
+else if(c.k=='p'){const p=c.p;give(p.item);if(p.item=='shard'){S.sh[p.idx]=1;if(S.sh.every(x=>x)){finish('shards')}}hud();save('auto',1)}
+else{if(S.inv.key&&S.clues.length<3)toast(L(D('Tanya penduduk tentang malam itu ('+S.clues.length+'/3).','Ask townsfolk about that night ('+S.clues.length+'/3).')));else if(S.inv.key){S.gate=1;toast(L(D('Pintu terbuka.','The gate opens.')));sfx(300);hud()}else toast(t('gl'))}}
+function run(steps){mode='dlg';const bx=$('dlg');bx.style.display='flex';let i=0;
+const sh=()=>{const s=steps[i];if(!s){fin();return}if(s.f){s.f();s.f=null}const nm=s.w=='p'?'Nadir':NPCS[s.w].n;$('dn').textContent=nm;$('dt').textContent=L(s.t);const pt=$('pt');pt.textContent=nm[0];pt.style.background=s.w=='p'?'#0f1a3d':'#'+NPCS[s.w].col.toString(16).padStart(6,'0');
+S.hist.push(nm+': '+L(s.t));if(S.hist.length>40)S.hist.shift();sfx(520);const dc=$('dc');dc.innerHTML='';if(s.c)s.c.forEach(c=>{const b=document.createElement('button');b.textContent=L(c.t);b.onclick=e=>{e.stopPropagation();if(c.f)c.f();steps=typeof c.s=='function'?c.s():(c.s||[]);i=0;sh()};dc.appendChild(b)})};
+const fin=()=>{bx.style.display='none';bx.onclick=null;mode='play';hud();save('auto',1)};
+bx.onclick=()=>{if(steps[i]&&steps[i].c)return;i++;sh()};sh()}
+// ---------- HUD
+function hud(){if(!S)return;$('lv').textContent=t('lvl')+' '+lvl()+' · '+t('ch');$('xb').style.width=(S.xp%80)/80*100+'%';$('co').textContent='🪙 '+(S.inv.coin||0);
+const order=['gate','lantern','letter','dates','shards'];let k=order.find(q=>S.q[q]==1);$('trk').innerHTML=k?'<b>'+L(Q[k].n)+'</b><br><span class=mut>'+L(Q[k].o())+'</span>':'';$('trk').style.display=k?'block':'none'}
+// ---------- panels
+const TABS=['char','quest','inv','map','jour','set','save'];
+function openPn(tab,only){if(mode!='menu'&&mode!='play'&&mode!='pause')return;prev=mode;mode='pause';if(prev=='menu')$('mm').style.display='none';$('pn').style.display='flex';$('hud').style.display=prev=='menu'?'none':'block';pn.only=only;tabs(tab)}
+const pn={};
+function tabs(tab){pn.tab=tab;const l=pn.only?[tab]:TABS;$('tabs').innerHTML=l.map(k=>'<button class="'+(k==tab?'on':'')+'" onclick="tabs(\''+k+'\')">'+t(k)+'</button>').join('')+'<button onclick="closePn()" style="margin-top:auto">'+t('back')+'</button>';$('pc').innerHTML=R2[tab]();if(tab=='map')drawMap()}
+function closePn(){$('pn').style.display='none';if(prev=='menu'){mode='menu';$('mm').style.display='flex';menuBtns()}else{mode='play';$('hud').style.display='block'}}
+const bar=(a,b)=>'<div class=bar><i style="width:'+a/b*100+'%"></i></div>';
+const R2={
+char:()=>'<div class=card><b>Nadir</b> · '+t('age')+' 19 · '+t('lvl')+' '+lvl()+'<br><span class=mut>'+L(D('Pembaiki tanglung dari Golden Bazaar, Qamar Empire. Tenang, ingin tahu, keras kepala.','Lantern-mender from the Golden Bazaar, Qamar Empire. Calm, curious, stubborn.'))+'</span>'+bar(S.xp%80,80)+'</div><div class=card><b>'+t('rel')+'</b><br>'+Object.keys(S.rel).map(k=>NPCS[k].n+': '+(S.rel[k]>0?'♥'.repeat(S.rel[k]):S.rel[k]<0?'✕':'–')).join(' &nbsp; ')+'</div><div class=card>'+t('ch')+'</div>',
+quest:()=>{const tn={main:t('main'),side:t('side'),chr:t('chr'),expl:t('expl')};return Object.keys(Q).filter(k=>S.q[k]).map(k=>{const q=Q[k],p=q.pr(),d=S.q[k]==2;return'<div class=card><b>'+L(q.n)+'</b> <span class=mut>['+tn[q.ty]+'] '+(d?t('done'):t('active'))+'</span><br>'+L(q.d)+'<br>'+(d?'':t('obj')+': '+L(q.o())+'<br>')+bar(p[0],p[1])+'<span class=mut>'+t('rw')+': '+q.r+' EXP</span></div>'}).join('')},
+inv:()=>{let h='';['key','qi','col','mat','oth'].forEach(c=>{const it=Object.keys(S.inv).filter(i=>S.inv[i]>0&&ITEM[i].c==c);h+='<div class=card><b>'+t(c)+'</b>'+(it.length?it.map(i=>'<br>'+L(ITEM[i].n)+' ×'+S.inv[i]+'<br><span class=mut>'+L(ITEM[i].d)+'</span>').join(''):'<br><span class=mut>'+t('none')+'</span>')+'</div>'});return h},
+map:()=>'<canvas id=mc width=560 height=190 style="width:100%"></canvas>',
+jour:()=>'<div class=card><b>'+L(D('Kisah','The Story'))+'</b><br>'+L(D('Sembilan belas tahun lalu, Ratu Bulan Qamar hilang dan bulan retak tiga. Dewan Takhta dikunci. Nadir, anak yatim pembaiki tanglung, kini dipanggil oleh cahaya yang tidak difahaminya.','Nineteen years ago the Moon Queen of Qamar vanished and the moon cracked in three. The Throne Hall was sealed. Nadir, an orphaned lantern-mender, is now called by a light he does not understand.'))+'</div><div class=card><b>★ '+L(D('Petunjuk','Clues'))+' ('+S.clues.length+'/3)</b>'+S.clues.map(c=>'<br>'+L(CL[c])).join('')+'</div><div class=card><b>'+t('hist')+'</b></div>'+(S.hist.length?S.hist.slice().reverse().map(x=>'<div class=card>'+x+'</div>').join(''):t('empty')),
+set:()=>'<div class=card><b>'+t('lang')+'</b><br><button class="'+(cfg.lang=='ms'?'on':'')+'" onclick="cs(\'lang\',\'ms\')">Bahasa Melayu</button> <button class="'+(cfg.lang=='en'?'on':'')+'" onclick="cs(\'lang\',\'en\')">English</button></div><div class=card><b>'+t('gfx')+'</b><br>'+['low','med','high'].map((k,i)=>'<button class="'+(cfg.gfx==i?'on':'')+'" onclick="cs(\'gfx\','+i+')">'+t(k)+'</button>').join(' ')+'</div><div class=card>'+t('music')+' <input type=range min=0 max=1 step=.05 value='+cfg.mv+' oninput="cs(\'mv\',+this.value,1)"> &nbsp; '+t('sfx')+' <input type=range min=0 max=1 step=.05 value='+cfg.sv+' oninput="cs(\'sv\',+this.value,1)"></div><div class=card><button onclick="fs()">'+t('fs')+'</button></div>',
+save:()=>['auto',1,2,3].map(s=>{let d=null;try{d=JSON.parse(localStorage.getItem('asatir_'+s))}catch(e){}const sm=d?t('lvl')+' '+(1+Math.floor(d.S.xp/80))+' · '+new Date(d.time).toLocaleString():t('none');return'<div class=card><b>'+(s=='auto'?t('auto'):t('slot')+' '+s)+'</b> <span class=mut>'+sm+'</span><br>'+(prev!='menu'&&s!='auto'?'<button onclick="save('+s+')">'+t('save')+'</button> ':'')+'<button '+(d?'':'disabled')+' onclick="loadG(\''+s+'\')">'+t('load')+'</button></div>'}).join('')};
+function cs(k,v,nr){cfg[k]=v;try{localStorage.setItem('asatir_set',JSON.stringify(cfg))}catch(e){}if(k=='gfx')gfxApply();if(k=='lang')lang();vol();if(!nr)tabs(pn.tab)}
+function lang(){document.documentElement.lang=cfg.lang;document.querySelectorAll('[data-k]').forEach(e=>e.textContent=t(e.dataset.k));hud();menuBtns()}
+function fs(){const d=document.documentElement;(d.requestFullscreen?d.requestFullscreen():Promise.reject()).then(()=>screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape')).catch(()=>{})}
+function drawMap(){const c=$('mc'),x=c.getContext('2d');x.fillStyle='#120c2a';x.fillRect(0,0,560,190);const N={qamar:[280,100],sahra:[90,140],zahir:[480,125],nuran:[290,170],rakhim:[470,40],azrah:[100,45],layali:[285,22]};
+x.strokeStyle='rgba(212,168,75,.45)';x.lineWidth=2;[['qamar','sahra'],['qamar','zahir'],['qamar','nuran'],['qamar','rakhim'],['qamar','azrah'],['azrah','layali'],['rakhim','layali']].forEach(([a,b])=>{x.beginPath();x.moveTo(...N[a]);x.lineTo(...N[b]);x.stroke()});
+x.font='15px Georgia';x.textAlign='center';Object.keys(N).forEach(k=>{const q=k=='qamar';x.beginPath();x.arc(N[k][0],N[k][1],q?16:10,0,7);x.fillStyle=q?'#d4a84b':'#3a1c5c';x.fill();x.fillStyle=q?'#fff':'#9a8aa8';x.fillText(k.toUpperCase()+(q?'':' ?'),N[k][0],N[k][1]+(q?32:24))});
+x.fillStyle='#fff';x.fillText('▼ Nadir',280,76);x.textAlign='left';x.fillStyle='#c9a27a';x.fillText('Golden Bazaar ✓  Moonlight Courtyard ✓  Throne Hall '+(S.gate?'✓':'🔒'),10,182)}
+// ---------- flow
+function menuBtns(){const has=['auto',1,2,3].some(s=>localStorage.getItem('asatir_'+s));$('mb2').innerHTML='<button onclick="newG()">'+t('new')+'</button><button '+(has?'':'disabled')+' onclick="cont()">'+t('cont')+'</button><button onclick="openPn(\'save\',1)">'+t('load')+'</button><button onclick="openPn(\'set\',1)">'+t('set')+'</button><button onclick="cred()">'+t('cred')+'</button>'}
+function cred(){mode='cinq';cin([t('cr')],()=>{mode='menu'})}
+function cin(lines,done){const e=$('cin');e.style.display='flex';let i=0;const sh=()=>{if(i>=lines.length){e.style.display='none';e.onclick=null;done();return}$('ct').textContent=lines[i++];sfx(300)};e.onclick=sh;sh()}
+function start(){mode='play';$('mm').style.display='none';$('hud').style.display='block';hero.position.set(P.x,0,P.z);hud();audio()}
+function newG(){audio();S=fresh();Object.assign(P,{x:0,z:14,y:0,vy:0});yaw=0;$('mm').style.display='none';mode='cin';cin([L(D('Sembilan belas tahun lalu, Ratu Bulan hilang dan bulan retak tiga. Dewan Takhta dikunci sejak itu.','Nineteen years ago the Moon Queen vanished and the moon cracked in three. The Throne Hall has been sealed since.')),L(D('Qamar. Bandar yang tidak pernah benar-benar gelap — bulannya tidak pernah terbenam sepenuhnya.','Qamar. A city never truly dark — its moon never quite sets.')),L(D('Nadir, sembilan belas tahun, pembaiki tanglung di Golden Bazaar. Cahaya tanglung sentiasa bergetar bila dia menghampiri.','Nadir, nineteen, lantern-mender of the Golden Bazaar. Lantern light always trembles when he draws near.')),L(D('Malam ini, sebuah tanglung hilang. Dan sebuah rahsia mula mencarimu.','Tonight a lantern is lost. And a secret begins to look for you.'))],start)}
+function save(s,q){try{localStorage.setItem('asatir_'+s,JSON.stringify({S,P:{x:P.x,z:P.z},yaw,time:Date.now()}));if(!q){toast(t('saved'));if(pn.tab=='save')tabs('save')}}catch(e){}}
+function loadG(s){try{const d=JSON.parse(localStorage.getItem('asatir_'+s));S=Object.assign(fresh(),d.S);P.x=d.P.x;P.z=d.P.z;P.y=0;yaw=d.yaw||0;$('pn').style.display='none';audio();start()}catch(e){}}
+function cont(){let b=null,bt=0;['auto',1,2,3].forEach(s=>{try{const d=JSON.parse(localStorage.getItem('asatir_'+s));if(d&&d.time>bt){bt=d.time;b=s}}catch(e){}});if(b!==null)loadG(b)}
+function ending(){S.end=1;mode='cin';S.q.gate=2;addXP(Q.gate.r);$('hud').style.display='none';const sh=S.sh.filter(x=>x).length==3;
+cin([L(D('Dewan Takhta itu kosong. Hanya sebuah orb emas berdenyut di atas altar.','The throne hall is empty. Only a golden orb pulses above the altar.')),L(D('Ia berdenyut mengikut degup jantung Nadir, lalu bersuara dengan suara seorang ibu: Anakku. Pewaris Qamar.','It pulses to Nadir\'s heartbeat, then speaks in a mother\'s voice: My child. Heir of Qamar.')),L(S.gen?D('Di luar, bazar menyebut kemurahan hatimu. Mungkin itulah sebab cahaya itu memilihmu.','Outside, the bazaar speaks of your generosity. Perhaps that is why the light chose you.'):D('Cahaya itu tidak bertanya apa yang kau pilih. Ia hanya tahu apa yang kau akan jadi.','The light did not ask what you chose. It only knew what you would become.')),sh?L(D('Tiga serpihan bulan di sakumu bergetar. Layali Realm sudah menunggu.','The three moon shards in your pocket tremble. The Layali Realm awaits.')):L(D('Di langit, bulan Qamar retak sedikit. Masih ada serpihan yang belum ditemui.','In the sky Qamar\'s moon cracks a little. Shards remain to be found.')),L(D('Tamat Bab 1 — Cahaya yang Hilang. Bab 2 akan datang.','End of Chapter 1 — The Vanished Light. Chapter 2 is coming.'))],()=>{save('auto',1);P.z=-10;P.x=0;S.gate=1;mode='play';$('hud').style.display='block'})}
+// ---------- loop
+const clk=new THREE.Clock();let sv=0;
+function loop(){requestAnimationFrame(loop);const dt=Math.min(clk.getDelta(),.05),tm=clk.elapsedTime;
+if(!S||mode=='menu'){const a=tm*.12;cam.position.set(Math.sin(a)*22,7,Math.cos(a)*22+4);cam.lookAt(0,3,0)}
+else{
+ if(mode=='play'){let ix=jx+(keys.d||keys.arrowright?1:0)-(keys.a||keys.arrowleft?1:0),iy=-jy+(keys.w||keys.arrowup?1:0)-(keys.s||keys.arrowdown?1:0);const m=Math.min(1,Math.hypot(ix,iy));
+  if(m>.05){const fx=-Math.sin(yaw),fz=-Math.cos(yaw),rx=Math.cos(yaw),rz=-Math.sin(yaw);let dx=fx*iy+rx*ix,dz=fz*iy+rz*ix;const l=Math.hypot(dx,dz);dx/=l;dz/=l;const sp=(m>.85||keys.shift?6.5:3.6)*Math.min(1,m*1.3);
+   const nx=P.x+dx*sp*dt,nz=P.z+dz*sp*dt;if(!blocked(nx,P.z,P.y))P.x=nx;if(!blocked(P.x,nz,P.y))P.z=nz;P.ry=Math.atan2(dx,dz);wk+=dt*sp*1.8;stT+=dt*sp;if(stT>2.1&&P.y<.05){stT=0;step()}}
+  else wk*=.9;
+  P.vy-=20*dt;P.y=Math.max(0,P.y+P.vy*dt);if(P.y==0&&P.vy<0)P.vy=0;
+  if(S.gate&&!S.end&&P.z<-18)ending();
+  cur=near();const a=$('act');if(cur){a.style.display='block';a.textContent=cur.l}else a.style.display='none';
+  sv+=dt;if(sv>30){sv=0;save('auto',1)}}
+ else $('act').style.display='none';
+ hero.position.set(P.x,P.y,P.z);hero.rotation.y+=(((P.ry-hero.rotation.y+Math.PI*3)%(Math.PI*2))-Math.PI)*Math.min(1,dt*12);
+ hero.arms[0].rotation.x=Math.sin(wk)*.8;hero.arms[1].rotation.x=-Math.sin(wk)*.8;hero.torso.forEach(o=>o.position.y+=0);hero.children[0].position.y=.8+Math.abs(Math.sin(wk))*.05*(1);
+ for(const n of npcs){const g=n.g,d=Math.hypot(g.position.x-P.x,g.position.z-P.z);g.lab.visible=d<12;let mv=0;if(mode=='play'&&d>3||mode=='menu'){if(n.w>0)n.w-=dt;else if(n.pts.length>1){const p=n.pts[n.i],dx=p[0]-g.position.x,dz=p[1]-g.position.z,l=Math.hypot(dx,dz);if(l<.3){n.i=(n.i+1)%n.pts.length;n.w=2+Math.random()*2}else{g.position.x+=dx/l*1.1*dt;g.position.z+=dz/l*1.1*dt;g.rotation.y=Math.atan2(dx,dz);mv=1}}}
+  g.arms[0].rotation.x=mv?Math.sin(tm*6)*.6:Math.sin(tm*1.5)*.05;g.arms[1].rotation.x=-g.arms[0].rotation.x;g.children[0].position.y=.8+(mv?Math.abs(Math.sin(tm*6))*.04:Math.sin(tm*1.5)*.01)}
+ for(const p of pick){p.m.visible=p.on();p.m.rotation.y=tm*1.5;p.m.position.y=.9+Math.sin(tm*2+p.x)*.15}
+ gate.position.y+=((S.gate?8.5:3)-gate.position.y)*Math.min(1,dt*2);orb.scale.setScalar(1+Math.sin(tm*3)*.15);
+ const tx=P.x,ty=P.y+1.6,tz=P.z;let d=dist;const cp=Math.cos(pit),sp=Math.sin(pit);
+ const at=q=>{const x=tx+Math.sin(yaw)*cp*q,y=ty+sp*q,z=tz+Math.cos(yaw)*cp*q;return[x,y,z]};
+ for(;d>1.2;d-=.4){const [x,y,z]=at(d);if(!col.some(c=>(!c.on||c.on())&&Math.abs(x-c.x)<c.hx+.3&&Math.abs(z-c.z)<c.hz+.3&&y<c.h)&&y>.4)break}
+ const [x,y,z]=at(d);cam.position.lerp(new THREE.Vector3(x,y,z),Math.min(1,dt*14));cam.lookAt(tx,ty,tz)}
+lamps.forEach((l,i)=>l.scale.setScalar(1+Math.sin(tm*4+i)*.08));
+{const a=dust.geometry.attributes.position;for(let i=0;i<a.count;i++){a.array[i*3]+=dt*1.5;if(a.array[i*3]>20)a.array[i*3]-=40}a.needsUpdate=true;dust.position.set(P.x,3,P.z)}
+R.render(sc,cam)}
+fit();gfxApply();lang();menuBtns();$('mm').style.display='flex';mode='menu';loop();
+</script></body></html>
